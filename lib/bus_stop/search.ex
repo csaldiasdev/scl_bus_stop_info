@@ -22,8 +22,6 @@ defmodule BusStop.Search do
            ]
 
   def get_prediction(stop_code) do
-    IO.puts("FETCHING DATA FROM STOP: #{stop_code}")
-
     xml_body = ~s"""
     <soapenv:Envelope
       xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
@@ -42,7 +40,7 @@ defmodule BusStop.Search do
     </soapenv:Envelope>
     """
 
-    case Finch.build(:post, @ws_url, @headers, xml_body) |> Finch.request(MyFinch) do
+    case Finch.build(:post, @ws_url, @headers, xml_body) |> Finch.request(SMSBusWebService) do
       {:ok, %Finch.Response{body: body, status: 200}} -> xmap(body, @mapping)
       _ -> :error
     end

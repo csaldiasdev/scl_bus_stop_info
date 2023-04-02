@@ -4,12 +4,14 @@ defmodule SclBusStopInfo.Router.WS do
   plug :match
   plug :dispatch
 
-  get "/" do
-    send_resp(conn, 200, "TESINGGGG WS")
+  get "/stop/:stop_id" do
+    conn
+    |> WebSockAdapter.upgrade(WsHub.EchoServer, stop_id, timeout: :infinity)
+    |> halt()
   end
 
   match _ do
-    send_resp(conn, 200, "NOT FOUND WS")
+    send_resp(conn, 404, Jason.encode!(%{message: "not found"}))
   end
 
 end

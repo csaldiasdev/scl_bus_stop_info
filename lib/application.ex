@@ -9,7 +9,8 @@ defmodule SclBusStopInfo.Application do
   def start(_type, _args) do
     children = [
       # Starts a worker by calling: SclBusStopInfo.Worker.start_link(arg)
-      {Finch, name: MyFinch},
+      {Finch, name: SMSBusWebService},
+      {Registry, keys: :duplicate, name: ConnectionStop, partitions: System.schedulers_online()},
       {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 8000]}
     ]
 

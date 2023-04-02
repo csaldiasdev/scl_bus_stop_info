@@ -23,6 +23,7 @@ defmodule SclBusStopInfo.MixProject do
   defp deps do
     [
       {:bandit, "~> 0.6"},
+      {:websock_adapter, "~> 0.5.0"},
       {:finch, "~> 0.15"},
       {:sweet_xml, "~> 0.7.1"},
       {:jason, "~> 1.4"}
