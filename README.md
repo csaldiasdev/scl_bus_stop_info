@@ -4,6 +4,11 @@
 
 ## Installation
 
+```bash
+sudo apt install erlang-dev
+sudo apt install erlang-xmerl
+```
+
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
 by adding `scl_bus_stop_info` to your list of dependencies in `mix.exs`:
 
