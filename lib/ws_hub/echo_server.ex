@@ -21,14 +21,20 @@ defmodule WsHub.EchoServer do
 
   def terminate(:timeout, state) do
     IO.puts("Connection closed by timeout")
+    unreg_conn_stop(state)
+  end
 
-    Registry.unregister(ConnectionStop, state)
-    {:ok, state}
+  def terminate(:remote, state) do
+    IO.puts("Connection closed by remote")
+    unreg_conn_stop(state)
   end
 
   def terminate({:error, :closed}, state) do
     IO.puts("Connection closed")
+    unreg_conn_stop(state)
+  end
 
+  defp unreg_conn_stop(state) do
     Registry.unregister(ConnectionStop, state)
     {:ok, state}
   end
