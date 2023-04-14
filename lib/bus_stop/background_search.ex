@@ -31,9 +31,15 @@ defmodule BusStop.BackgroundSearch do
 
     case Search.get_prediction(stop_id) do
       %{predictions: data} ->
-        Registry.dispatch(ConnectionStop, stop_id, fn entries ->
-          for {pid, _} <- entries, do: send(pid, Jason.encode!(data))
-        end)
+
+        if Registry.count_match(ConnectionStop, stop_id, []) > 0 do
+          Registry.dispatch(ConnectionStop, stop_id, fn entries ->
+            for {pid, _} <- entries, do: send(pid, Jason.encode!(data))
+          end)
+        else
+          IO.puts("CALLING Process.exit - #{stop_id}")
+          Process.exit(self(), [])
+        end
 
         {:noreply, [stop_id, data], @timeout}
 
