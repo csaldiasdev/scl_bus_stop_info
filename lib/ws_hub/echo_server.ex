@@ -6,6 +6,8 @@ defmodule WsHub.EchoServer do
 
     Registry.register(ConnectionStop, stop_id, [])
 
+    BusStop.BackgroundSearch.start(stop_id)
+
     {:ok, stop_id}
   end
 

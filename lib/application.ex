@@ -11,6 +11,7 @@ defmodule SclBusStopInfo.Application do
       # Starts a worker by calling: SclBusStopInfo.Worker.start_link(arg)
       {Finch, name: SMSBusWebService},
       {Registry, keys: :duplicate, name: ConnectionStop, partitions: System.schedulers_online()},
+      {Registry, keys: :unique, name: BackgroundProcess, partitions: System.schedulers_online()},
       {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 8000]}
     ]
 
