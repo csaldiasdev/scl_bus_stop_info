@@ -1,22 +1,16 @@
 defmodule SclBusStopInfo.Application do
-  # See https://hexdocs.pm/elixir/Application.html
-  # for more information on OTP Applications
-  @moduledoc false
-
   use Application
 
   @impl true
   def start(_type, _args) do
     children = [
-      # Starts a worker by calling: SclBusStopInfo.Worker.start_link(arg)
       {Finch, name: SMSBusWebService},
       {Registry, keys: :duplicate, name: ConnectionStop, partitions: System.schedulers_online()},
       {Registry, keys: :unique, name: BackgroundProcess, partitions: System.schedulers_online()},
-      {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 8000]}
+      {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 8000]},
+      {BusStop.SearchTrigger, []}
     ]
 
-    # See https://hexdocs.pm/elixir/Supervisor.html
-    # for other strategies and supported options
     opts = [strategy: :one_for_one, name: SclBusStopInfo.Supervisor]
     Supervisor.start_link(children, opts)
   end
