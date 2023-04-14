@@ -7,7 +7,7 @@ defmodule SclBusStopInfo.Application do
       {Finch, name: SMSBusWebService},
       {Registry, keys: :duplicate, name: ConnectionStop, partitions: System.schedulers_online()},
       {Registry, keys: :unique, name: BackgroundProcess, partitions: System.schedulers_online()},
-      {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 8000]},
+      {Bandit, plug: SclBusStopInfo.Router.Main, scheme: :http, options: [port: 4000]},
       {BusStop.SearchTrigger, []}
     ]
 
