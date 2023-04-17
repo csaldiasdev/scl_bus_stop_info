@@ -46,10 +46,35 @@ defmodule BusStop.Search do
     end
   end
 
-  defp format_response response do
+  defp format_response(response) do
     case response do
-      %{predictions: data} -> {:ok, data}
-      _ -> :empty
+      %{predictions: data} ->
+        data_1 =
+          Enum.map(data, fn element ->
+            %{
+              bus_distance: element.bus_distance_1,
+              bus_prediction: element.bus_prediction_1,
+              bus_plate: element.bus_plate_1,
+              service_code: element.service_code,
+              service_response: element.service_response
+            }
+          end)
+
+        data_2 =
+          Enum.map(data, fn element ->
+            %{
+              bus_distance: element.bus_distance_2,
+              bus_prediction: element.bus_prediction_2,
+              bus_plate: element.bus_plate_2,
+              service_code: element.service_code,
+              service_response: element.service_response
+            }
+          end)
+
+        {:ok, Enum.concat(data_1, data_2) |> Enum.sort_by(& &1.bus_distance, :asc)}
+
+      _ ->
+        :empty
     end
   end
 end
