@@ -41,8 +41,15 @@ defmodule BusStop.Search do
     """
 
     case Finch.build(:post, @ws_url, @headers, xml_body) |> Finch.request(SMSBusWebService) do
-      {:ok, %Finch.Response{body: body, status: 200}} -> xmap(body, @mapping)
+      {:ok, %Finch.Response{body: body, status: 200}} -> xmap(body, @mapping) |> format_response
       _ -> :error
+    end
+  end
+
+  defp format_response response do
+    case response do
+      %{predictions: data} -> {:ok, data}
+      _ -> :empty
     end
   end
 end

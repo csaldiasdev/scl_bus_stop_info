@@ -6,7 +6,7 @@ defmodule SclBusStopInfo.Router.Api do
 
   get "/stop/:code" do
     case BusStop.Search.get_prediction(code) do
-      %{predictions: data} -> send_resp(conn, 200, Jason.encode!(data))
+      {:ok, data} -> send_resp(conn, 200, Jason.encode!(data))
       :error -> send_resp(conn, 500, Jason.encode!(%{message: "error fetching data"}))
       _ -> send_resp(conn, 500, Jason.encode!(%{message: "unexpected error"}))
     end

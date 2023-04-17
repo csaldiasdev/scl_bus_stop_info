@@ -18,7 +18,7 @@ defmodule BusStop.BackgroundSearch do
 
   def init([stop_id, _]) do
     case Search.get_prediction(stop_id) do
-      %{predictions: data} -> {:ok, [stop_id, data], @timeout}
+      {:ok, data} -> {:ok, [stop_id, data], @timeout}
       _ -> {:ok, [stop_id, []], @timeout}
     end
 
@@ -30,7 +30,7 @@ defmodule BusStop.BackgroundSearch do
     IO.puts("FETCHING STOP INFO: #{stop_id}")
 
     case Search.get_prediction(stop_id) do
-      %{predictions: data} ->
+      {:ok, data} ->
 
         if Registry.count_match(ConnectionStop, stop_id, []) > 0 do
           Registry.dispatch(ConnectionStop, stop_id, fn entries ->
