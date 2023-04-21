@@ -56,7 +56,8 @@ defmodule BusStop.Search do
               bus_prediction: element.bus_prediction_1,
               bus_plate: element.bus_plate_1,
               service_code: element.service_code,
-              service_response: element.service_response
+              service_response: element.service_response,
+              response_code: element.response_code
             }
           end)
 
@@ -67,11 +68,24 @@ defmodule BusStop.Search do
               bus_prediction: element.bus_prediction_2,
               bus_plate: element.bus_plate_2,
               service_code: element.service_code,
-              service_response: element.service_response
+              service_response: element.service_response,
+              response_code: element.response_code
             }
           end)
 
-        {:ok, Enum.concat(data_1, data_2) |> Enum.sort_by(& &1.bus_distance, :asc)}
+        list =
+          Enum.concat(data_1, data_2)
+          |> Enum.sort_by(& &1.bus_distance, :asc)
+          |> Enum.filter(fn e ->
+            !(e.bus_distance === 0 && e.bus_plate === "" && e.bus_prediction === "" &&
+                e.service_response === "")
+          end)
+          |> Enum.uniq()
+
+        available = Enum.filter(list, fn e -> e.bus_distance > 0 end)
+        not_available = Enum.filter(list, fn e -> e.bus_distance === 0 end)
+
+        {:ok, Enum.concat(available, not_available)}
 
       _ ->
         :empty
